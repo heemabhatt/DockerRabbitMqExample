@@ -4,3 +4,5 @@ POC for .Net Core APIs to post payload to RabbitMq. and Docker as deployment uni
 # Useful resources
 
 https://www.tutlane.com/tutorial/rabbitmq/csharp-publish-message-to-rabbitmq-queue
+
+https://docs.docker.com/engine/examples/dotnetcore/
