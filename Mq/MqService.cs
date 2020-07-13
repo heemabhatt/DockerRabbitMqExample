@@ -31,7 +31,9 @@ namespace DockerRabbitMqExample.Mq
               var properties = model.CreateBasicProperties();
 
             properties.Persistent = false;
-          // Create Exchange
+            
+            
+            // Create Exchange
 
             model.ExchangeDeclare("demoExchange", ExchangeType.Direct);
          
