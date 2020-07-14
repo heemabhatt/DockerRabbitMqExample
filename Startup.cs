@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using DockerRabbitMqExample.Mq;
 using DockerRabbitMqExample.Models;
+using RabbitMQ.Client;
 
 namespace DockerRabbitMqExample
 {
@@ -23,6 +17,7 @@ namespace DockerRabbitMqExample
         }
 
         public IConfiguration Configuration { get; }
+        public IConnection Connection{get;}
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -30,7 +25,18 @@ namespace DockerRabbitMqExample
             services.AddControllers();
             IConfigurationSection sec = Configuration.GetSection("MqSettings");
             services.Configure<MqSettings>(sec);
-            services.AddTransient<IConnectionService, ConnectionService>();
+            services.AddSingleton(Configuration);
+            
+            var connectionFactory = new RabbitMQ.Client.ConnectionFactory()
+            {
+                UserName = Configuration.GetSection("MqSettings:UserName").Value,
+                Password = Configuration.GetSection("MqSettings:Password").Value,
+                HostName = Configuration.GetSection("MqSettings:HostName").Value
+            };
+
+            var connection =  connectionFactory.CreateConnection();
+            services.AddSingleton<IConnection>(connection);
+            services.AddSingleton<IModelService, ModelService>();
             services.AddSingleton<IMqService, MqService>();
         }
 
@@ -46,7 +52,7 @@ namespace DockerRabbitMqExample
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

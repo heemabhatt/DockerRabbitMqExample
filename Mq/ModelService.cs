@@ -4,30 +4,27 @@ using RabbitMQ.Client;
 
 namespace DockerRabbitMqExample.Mq
 {
-    public class ConnectionService : IConnectionService
+    public class ModelService : IModelService
     {
+         // private readonly IConnectionService _connectionService;
+         private readonly IConnection _connection;
         private readonly IOptions<MqSettings> _mqSettings;
-        public ConnectionService(IOptions<MqSettings> mqSettings)
+        public ModelService( IConnection connection, IOptions<MqSettings> mqSettings)
         {
+          //  _connectionService = connectionService;
+          _connection=connection;
             _mqSettings = mqSettings;
         }
 
         public IModel GetModel()
-        {
-            var connectionFactory = new RabbitMQ.Client.ConnectionFactory()
-            {
-                UserName = _mqSettings.Value.UserName,
-                Password = _mqSettings.Value.Password,
-                HostName = _mqSettings.Value.HostName
-            };
+        {   
+           // var connection = _connectionService.GetConnection();
 
-            var connection = connectionFactory.CreateConnection();
+            var model = _connection.CreateModel();
 
-            var model = connection.CreateModel();
-            
             // Create Exchange
             model.ExchangeDeclare(_mqSettings.Value.ExchangeSettings.ExchangeName, ExchangeType.Direct);
-         
+
             // Create Queue
             model.QueueDeclare(_mqSettings.Value.QueueSettings.QueueName, true, false, false, null);
 

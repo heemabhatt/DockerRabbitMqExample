@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DockerRabbitMqExample.Models;
 using DockerRabbitMqExample.Mq;
+using System;
 
 namespace DockerRabbitMqExample.Controllers
 {
@@ -15,9 +16,18 @@ namespace DockerRabbitMqExample.Controllers
         }
 
         [HttpPost]
-        public void Post([FromBody]Message message)
+        public IActionResult Post([FromBody]Message message)
         {   
-            _mqService.PublishToMq(message);
+            try
+            {
+                _mqService.PublishToMq(message);
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                 Console.WriteLine(ex.Message);
+                return StatusCode(500,ex.Message);
+            }
         }
 
         [HttpGet]
