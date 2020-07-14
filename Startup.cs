@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using DockerRabbitMqExample.Mq;
+using DockerRabbitMqExample.Models;
 
 namespace DockerRabbitMqExample
 {
@@ -27,6 +28,9 @@ namespace DockerRabbitMqExample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            IConfigurationSection sec = Configuration.GetSection("MqSettings");
+            services.Configure<MqSettings>(sec);
+            services.AddTransient<IConnectionService, ConnectionService>();
             services.AddSingleton<IMqService, MqService>();
         }
 
