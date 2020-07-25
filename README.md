@@ -22,3 +22,8 @@ docker push heemadocker/dockerrabbitmqexample:v1
 docker ps
 
 docker exec -it [container_id] bash
+
+
+# Run on Linux VM on Azure
+https://dzone.com/articles/how-to-install-docker-on-ubuntu1804
+Allow port 7001
