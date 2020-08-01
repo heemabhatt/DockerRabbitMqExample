@@ -16,7 +16,7 @@ dotnet run
 docker build -t heemadocker/dockerrabbitmqexample:v1 .
 
 docker run -it -p 7001:80 heemadocker/dockerrabbitmqexample:v1
-
+docker login
 docker push heemadocker/dockerrabbitmqexample:v1
 
 docker ps
